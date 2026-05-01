@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PETUGAS
+}
+
+enum RFIDStatus {
+  AKTIF
+  NONAKTIF
+}
+
+enum GateStatus {
+  MASUK
+  KELUAR
+  DITOLAK
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     Role
+
+  rfidCards RFIDCard[]
+}
+
+model RFIDCard {
+  id     Int        @id @default(autoincrement())
+  uid    String     @unique
+  status RFIDStatus
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  logs   GateLog[]
+}
+
+model GateLog {
+  id        Int        @id @default(autoincrement())
+  status    GateStatus
+  createdAt DateTime   @default(now())
+
+  rfidId Int
+  rfid   RFIDCard @relation(fields: [rfidId], references: [id])
+}
