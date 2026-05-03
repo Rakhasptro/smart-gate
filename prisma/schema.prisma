@@ -26,9 +26,8 @@ enum GateStatus {
 model User {
   id       Int    @id @default(autoincrement())
   name     String
-  email    String @unique
-  password String
-  role     Role
+  nik      String
+  address  String
 
   rfidCards RFIDCard[]
 }
@@ -51,4 +50,11 @@ model GateLog {
 
   rfidId Int
   rfid   RFIDCard @relation(fields: [rfidId], references: [id])
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role
 }
